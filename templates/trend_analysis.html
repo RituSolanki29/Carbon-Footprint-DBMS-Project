@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard Data Analysis Page</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #16423c;
+      color:white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: #ffffff;
+    }
+
+    header {
+      background: #ffffff; /* Navbar background */
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for better visibility */
+    }
+
+    header nav ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+
+    header nav ul li {
+      margin: 0 15px;
+    }
+
+    header nav ul li:last-child {
+      margin-right: 30px;
+    }
+
+    header nav ul li a {
+      color: black; /* Navbar text color */
+      font-weight: bold;
+      transition: color 0.3s;
+      font-size: 20px;
+    }
+
+    header nav ul li a:hover {
+      color: #16423c; /* Hover effect color */
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      margin: 20px;
+      margin-top: 120px; /* Space between navbar and content */
+    }
+
+    .main {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      margin: 0;
+    }
+
+    .header .help {
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .dashboard-title {
+      font-size: 48px;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 40px;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .stat {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      width: 250px;
+    }
+
+    .stat .value {
+        font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: #16423c;
+    }
+
+    .stat .label {
+      font-size: 16px;
+      color: #666;
+    }
+
+    .chart-heading {
+      font-size: 32px;
+      font-weight: bold;
+      color: white;
+      text-align: center;
+      margin-top: 60px;
+      margin-bottom: 40px;
+    }
+
+    canvas {
+      max-width: 1000px;
+      height: 500px; /* Increased height for the chart */
+      margin: 40px auto; /* Increased margin for better positioning */
+      display: block
+    }
+
+    /* Donut Chart Section */
+    .donut-chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0; /* Increased margin for better spacing */
+  }
+
+  .donut-chart-container h1 {
+    font-size: 32px; /* Slightly larger font size for the heading */
+    font-weight: bold;
+    color: white;
+    margin-bottom: 10px; /* More space between heading and chart */
+    text-align: center;
+  }
+
+  canvas#donutChart {
+    max-width: 600px; /* Increased width of the chart */
+    max-height: 600px; /* Added a height limit to maintain proportion */
+    margin: 20px auto;
+    display: block; /* Center the chart */
+    border-radius: 10px; /* Rounded corners for the border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow for a 3D effect */
+  }
+
+  
+
+    /* Footer Section */
+    footer {
+      background-color: #000000;
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      margin-top: auto; /* Push footer to the bottom */
+    }
+
+    footer .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    footer ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 0;
+    }
+
+    footer ul li {
+      font-size: 16px;
+    }
+
+    footer ul li a {
+      color: white;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    footer ul li a:hover {
+      color: #80CBC4;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="trend_analysis.html">Trend Analysis</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <div class="main">
+        <div class="dashboard-title">Dashboard</div>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="value" id="avg_food">0</div>
+                <div class="label">Average Food Emission</div>
+            </div>
+            <div class="stat">
+                <div class="value" id="avg_travel">0</div>
+                <div class="label">Average Travel Emission</div>
+            </div>
+            <div class="stat">
+                <div class="value" id="avg_electricity">0</div>
+                <div class="label">Average Electricity Emission</div>
+            </div>
+            <div class="stat">
+                <div class="value" id="avg_waste">0</div>
+                <div class="label">Average Wastage Emission</div>
+            </div>
+        </div>
+
+        <div class="chart-heading">Carbon Emissions Scatter Graph</div>
+        <div id="myPlot"></div>
+
+        
+    </div>
+</div>
+
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+
+  <script>
+    // Fetch the average values from the Flask API
+    fetch('/average_data')
+        .then(response => response.json())  // Parse the JSON response
+        .then(data => {
+            // Update the HTML with the average values
+            document.getElementById('avg_food').textContent = data.avg_food ? data.avg_food : 'N/A';
+            document.getElementById('avg_travel').textContent = data.avg_travel ? data.avg_travel : 'N/A';
+            document.getElementById('avg_electricity').textContent = data.avg_electricity ? data.avg_electricity : 'N/A';
+            document.getElementById('avg_waste').textContent = data.avg_waste ? data.avg_waste : 'N/A';
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            // Display an error message if the request fails
+            document.getElementById('avg_food').textContent = 'Error';
+            document.getElementById('avg_travel').textContent = 'Error';
+            document.getElementById('avg_electricity').textContent = 'Error';
+            document.getElementById('avg_waste').textContent = 'Error';
+        });
+        
+
+        fetch('/getemissiongraph')
+        .then(response => response.json())  // Parse the JSON response
+        .then(data => {
+            if (data.ids !== undefined ) {
+                const xarray = data.ids;  // Assuming 'ids' corresponds to the date or ID
+                const yArray = data.total;  // Assuming 'totals' corresponds to the 'total' data for plotting
+
+                const plotData = [{
+                    x: xarray,
+                    y: yArray,
+                    mode: "lines+markers",
+                    type: "scatter"
+                }];
+
+                const layout = {
+                    xaxis: {
+                        title: "ID",  // Update this to reflect the correct axis description
+                        type: "category"
+                    },
+                    yaxis: {
+                        title: "Total"
+                    },
+                    title: "Total vs ID"
+                };
+
+                Plotly.newPlot("myPlot", plotData, layout);
+            } else {
+                console.error("Failed to get values for graph");
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    
+</script>
+
+
+<!-- Donut Chart Section -->
+<div class="donut-chart-container">
+  <h1>Carbon Footprint Breakdown</h1>
+  <canvas id="donutChart"></canvas>
+</div>
+<script src="/static/donut_chart.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const ctx = document.getElementById('donutChart').getContext('2d');
+
+    // Fetch data from the Flask endpoint
+    fetch('/get_chart_data')
+        .then(response => response.json())
+        .then(data => {
+            const donutChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Carbon Footprint',
+                        data: data.values,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',  // Food
+                            'rgba(54, 162, 235, 0.6)',  // Travel
+                            'rgba(255, 206, 86, 0.6)',  // Electricity
+                            'rgba(75, 192, 192, 0.6)'   // Waste
+                        ],
+                        hoverBackgroundColor: [
+                            'rgba(255, 99, 132, 0.8)',
+                            'rgba(54, 162, 235, 0.8)',
+                            'rgba(255, 206, 86, 0.8)',
+                            'rgba(75, 192, 192, 0.8)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                font: {
+                                    size: 16 // Adjusted font size for better readability
+                                },
+                                color: 'white' // Changed legend text color
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    return `${label}: ${value.toFixed(2)} kg CO2`;
+                                }
+                            }
+                        }
+                    },
+                    layout: {
+                        padding: 15 // Adjusted padding for a cleaner look
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching chart data:', error);
+        });
+  });
+  
+</script>
+
+
+<!-- Footer Section -->
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2024 EcoTally. All rights reserved.</p>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#privacy">Privacy Policy</a></li>
+        <li><a href="#terms">Terms of Service</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>

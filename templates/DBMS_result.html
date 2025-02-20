@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hello, World!</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700&display=swap');
+
+    /* General Reset */
+    *, *:after, *:before {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "DM Sans", sans-serif;
+      margin: 0;
+      padding: 0;
+      line-height: 1.5;
+      background: #16423c;
+      color: white;
+    }
+
+    header {
+      background: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    header nav ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+
+    header nav ul li {
+      margin: 0 15px;
+    }
+
+    header nav ul li a {
+      color: black;
+      font-weight: bold;
+      transition: color 0.3s;
+      font-size: 20px;
+      text-decoration: none;
+    }
+
+    header nav ul li a:hover {
+      color: #16423c;
+    }
+
+    .hero {
+      position: relative;
+      height: 50vh;
+      background-image: url("../static/carbon_footprint3.jpg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .content {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .gradient-heading {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 2rem auto;
+      text-align: center;
+      background: white;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .overview, .graph-container, .suggestions-container, .pie-chart-container {
+      background-color: white;
+      color: #000;
+      padding: 3rem;
+      border-radius: 10px;
+      margin: 3rem auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      max-width: 800px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      font-size: 1.5rem;
+    }
+
+    .suggestions-container ul, .suggestions-container li {
+      margin: 0.5rem 0;
+      text-align: center;
+    }
+
+    .pie-chart-container {
+  width: 90%; /* Reduced width */
+  max-width: 600px; /* Reduced max width */
+  margin: 2rem auto; /* Reduced margin */
+  padding: 2rem; /* Reduced padding */
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#pieChart {
+  width: 100% !important;
+  height: 400px !important; /* Reduced height */
+  max-width: 500px; /* Reduced max-width */
+}
+
+    #footprintChart {
+      width: 100% !important;
+      height: auto !important;
+      max-width: 600px;
+
+    }
+
+    footer {
+      background-color: #000000;
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    footer ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 0;
+    }
+
+    footer ul li a {
+      color: white;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    footer ul li a:hover {
+      color: #80CBC4;
+    }
+
+    button {
+      padding: 12px 24px;
+      display: block;
+      margin: 10px auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('render_trend_analysis') }}">Trend Analysis</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="hero">
+    <h1>Carbon Footprint Analysis</h1>
+  </div>
+
+  <div class="content">
+    <h1 class="gradient-heading">Your Personalized Footprint Overview</h1>
+    <div class="overview">
+      <p>Your total carbon footprint is <strong>{{ total }} kg CO2</strong></p>
+      <p>Here's how it breaks down:</p>
+      <p>Food: <strong>{{ food }} kg CO2</strong></p>
+      <p>Travel: <strong>{{ travel }} kg CO2</strong></p>
+      <p>Electricity: <strong>{{ electricity }} kg CO2</strong></p>
+      <p>Waste: <strong>{{ waste }} kg CO2</strong></p>
+    </div>
+
+    <h3 class="gradient-heading">Carbon Footprint Chart</h3>
+    <div class="graph-container">
+      <canvas id="footprintChart"></canvas>
+    </div>
+
+    <h3 class="gradient-heading">Carbon Footprint Distribution</h3>
+    <div class="pie-chart-container">
+      <canvas id="pieChart"></canvas>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    var foodFootprint = {{ food|tojson }};
+    var travelFootprint = {{ travel|tojson }};
+    var electricityFootprint = {{ electricity|tojson }};
+    var wasteFootprint = {{ waste|tojson }};
+    var avgFood = {{ avg_food|tojson }};
+    var avgTravel = {{ avg_travel|tojson }};
+    var avgElectricity = {{ avg_electricity|tojson }};
+    var avgWaste = {{ avg_waste|tojson }};
+
+    var ctx = document.getElementById('footprintChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Food', 'Travel', 'Electricity', 'Waste'],
+        datasets: [
+          {
+            label: 'Your Carbon Footprint',
+            data: [foodFootprint, travelFootprint, electricityFootprint, wasteFootprint],
+            backgroundColor: ['#4caf50', '#2196f3', '#ff9800', '#f44336'],
+            borderColor: ['#388e3c', '#1976d2', '#f57c00', '#d32f2f'],
+            borderWidth: 1
+          },
+          {
+            label: 'Average Carbon Footprint',
+            data: [avgFood, avgTravel, avgElectricity, avgWaste],
+            backgroundColor: 'rgba(0,0,0,0.1)',
+            borderColor: 'rgba(0,0,0,0.3)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: value => value + ' kg CO2e'
+            }
+          }
+        },
+        responsive: true
+      }
+    });
+
+    fetch('/get_pie_chart_data')
+      .then(response => response.json())
+      .then(data => {
+        const ctxPie = document.getElementById('pieChart').getContext('2d');
+        new Chart(ctxPie, {
+          type: 'pie',
+          data: {
+            labels: data.labels,
+            datasets: [{
+              data: data.values,
+              backgroundColor: ['#4caf50', '#2196f3', '#ff9800', '#f44336'],
+              hoverBackgroundColor: ['#388e3c', '#1976d2', '#f57c00', '#d32f2f']
+            }]
+          }
+        });
+      })
+      .catch(error => console.error('Error loading chart data:', error));
+  </script>
+
+<h1 class="gradient-heading">Explore ways to reduce emissions sustainably!</h1>
+
+  <div class="suggestions-container">
+    <h3>Suggestions to Reduce Your Carbon Footprint:</h3>
+    {% if suggestions %}
+    <ul>
+      {% for suggestion in suggestions %}
+        <li>{{ suggestion }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+
+  <button onclick="window.location.href='/home';">Go Back to Home</button>
+
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2024 EcoTally. All rights reserved.</p>
+      <ul>
+        <li><a href="#about">About</a></li>
+        <li><a href="#privacy">Privacy Policy</a></li>
+        <li><a href="#terms">Terms of Service</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>

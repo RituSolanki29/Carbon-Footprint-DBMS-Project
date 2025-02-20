@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EcoTally</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Roboto', sans-serif;
+      color: #444444;
+      margin: 0;
+      padding: 0;
+      background-color: #16423c;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    a {
+      text-decoration: none;
+      color: #444444;
+    }
+
+    /* Header Section - Fixed Navbar */
+    header {
+      background: white; /* Set navbar background to white */
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    header nav ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      padding: 0;
+    }
+
+    header nav ul li {
+      margin: 0 15px;
+    }
+
+    header nav ul li:last-child {
+      margin-right: 30px;
+    }
+
+    header nav ul li a {
+      color: black; /* Text color as black */
+      font-weight: bold;
+      transition: color 0.3s;
+      font-size: 20px;
+    }
+
+    header nav ul li a:hover {
+      color: #16423c; /* Hover effect color */
+    }
+
+    /* Hero Section */
+    #hero {
+      background-image: url("../static/carbon_footprint5.jpg");
+      background-size: cover;
+      background-position: center;
+      color: white;
+      font-size: 30px;
+      text-align: center;
+      padding: 4rem 1rem;
+      margin-top: 0;
+      height: 50vh;
+      position: relative;
+    }
+
+    #hero .cta-btn {
+      background-color: #16423c;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 1rem;
+      border-radius: 5px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    #hero .cta-btn:hover {
+      background-color: #004D40;
+    }
+
+    /* Introduction Section */
+    #intro {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 3rem;
+      background-color: #16423c;
+      color: white;
+      margin-top: 3rem; /* Increase space between hero and intro */
+      width: 90%;
+      border-radius: 10px;
+    }
+
+    .intro-container {
+      display: flex;
+      gap: 3rem;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    /* Removed box styles */
+    .intro-box {
+      flex: 1;
+      padding: 2rem;
+      background-color: transparent; /* Removed background */
+      color: white;
+    }
+
+    .intro-box h2 {
+      font-size: 2.5rem;
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    .intro-box p {
+      font-size: 1.4rem;
+      color: white;
+      line-height: 1.6;
+    }
+
+    .intro-video {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .intro-video video {
+      width: 100%;
+      max-width: 700px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Features Section */
+    #features {
+      background-color: #16423c;
+      padding: 2rem 1rem;
+      color: white;
+      text-align: center;
+      margin-top: 1rem; /* Reduced space between intro and features */
+    }
+
+    #features h2 {
+      font-size: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .features-container {
+      display: flex;
+      justify-content: space-evenly;
+      gap: 2rem;
+      flex-wrap: nowrap;
+    }
+
+    .feature-card {
+      background-color: white;
+      padding: 3rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      text-align: center;
+      color: #444444;
+      transition: transform 0.3s;
+      flex-grow: 1;
+    }
+
+    .feature-card:hover {
+      transform: scale(1.05);
+    }
+
+    .feature-card h3 {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card p {
+      font-size: 1.2rem;
+      color: #777777;
+    }
+
+    /* Footer Section */
+    footer {
+      background-color: #000000;
+      color: white;
+      padding: 2rem 1rem;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    footer .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    footer ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      padding: 0;
+    }
+
+    footer ul li {
+      font-size: 16px;
+    }
+
+    footer ul li a {
+      color: white;
+      font-weight: bold;
+      transition: color 0.3s;
+    }
+
+    footer ul li a:hover {
+      color: #80CBC4;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Section -->
+  <header>
+    <nav>
+      <ul>
+        <li><a href="{{ url_for('home') }}">Home</a></li>
+        <li><a href="{{ url_for('render_trend_analysis') }}">Trend Analysis</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Main Section -->
+  <main>
+    <!-- Hero Section -->
+    <section id="hero">
+      <div class="hero-content">
+        <h1>EcoTally</h1>
+        <p>"Are You Walking Light on the Earth?"</p>
+        <a class="cta-btn" href="{{ url_for('dbms_page') }}">Get Started</a>
+      </div>
+    </section>
+
+    <!-- Introduction Section -->
+    <section id="intro">
+      <div class="intro-container">
+        <div class="intro-box">
+          <h2>Welcome to EcoTally</h2>
+          <p>
+            In today’s world, understanding and reducing emissions is vital for combating climate change and building a sustainable future. Together, we can make informed choices for a healthier planet.
+            Our website helps you calculate your individual carbon footprint, highlighting your impact through activities like food, travel, electricity, and waste. 
+          </p>
+        </div>
+        <div class="intro-video">
+          <video autoplay muted loop>
+            <source src="{{ url_for('static', filename='carbon_footprint.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features">
+      <h2>Features</h2>
+      <div class="features-container">
+        <div class="feature-card">
+          <h3>Interactive Exercises</h3>
+          <p>Engage with fun, hands-on activities designed to teach you how to reduce your carbon footprint!</p>
+        </div>
+        <div class="feature-card">
+          <h3>Expert Assistance</h3>
+          <p>Our team of eco-experts is available to assist you with any questions or advice you need to minimize your environmental impact.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Track Your Progress</h3>
+          <p>See how your efforts are making a difference by tracking your carbon footprint over time and setting new goals!</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer Section -->
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2024 EcoTally | All Rights Reserved</p>
+      <ul>
+        <li><a href="#privacy">Privacy Policy</a></li>
+        <li><a href="#terms">Terms of Service</a></li>
+        <li><a href="#contact">Contact Us</a></li>
+      </ul>
+    </div>
+  </footer>
+</body>
+</html>

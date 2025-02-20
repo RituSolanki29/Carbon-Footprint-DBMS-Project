@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBMS_form</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap">
+    <style>
+        :root {
+            --primary-bg-color: #F7B1AB;
+            --secondary-bg-color: #807182;
+            --hover-color: #77dd77;
+            --font-color: rgba(0, 0, 0, 0.8);
+            --form-border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background: #16423c;
+            color: var(--font-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 400;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        
+        .signup-container {
+            display: flex;
+            max-width: 900px;
+            max-height: 90vh;
+            border: 1px solid var(--form-border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .left-container {
+            background: var(--secondary-bg-color);
+            position: relative;
+            width: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .left-container .puppy {
+            width: 100%;
+            height: 100%;
+            background: url("../static/carcon_footprint1.jpeg") no-repeat center center;
+            background-size: cover;
+        }
+        .right-container {
+            background: #ffffff;
+            padding: 40px;
+            width: 550px;
+            overflow-y: auto;
+        }
+        .right-container h1 {
+            color: var(--font-color);
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+        label, select, input {
+            color: var(--font-color);
+        }
+        input, select {
+            border: 1px solid var(--form-border-color);
+            border-radius: 4px;
+            height: 38px;
+            padding-left: 5px;
+            margin-top: 5px;
+        }
+        .radio-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+        .radio-container label {
+            background: transparent;
+            border-radius: 2px;
+            padding: 0 10px;
+            line-height: 26px;
+            transition: 0.2s all ease-in-out;
+            cursor: pointer;
+        }
+        .radio-container input[type="radio"] {
+            display: none;
+        }
+        .radio-container input[type="radio"]:checked + label {
+            background: #16423c;
+            color: #fff;
+        }
+        footer {
+            display: flex;
+            justify-content: center;
+            padding-top: 20px;
+        }
+        footer button {
+            border: 1px solid rgba(0, 0, 0, 0.2);
+            height: 38px;
+            width: 100px;
+            border-radius: 19px;
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.2s all ease-in-out;
+        }
+        #back {
+            background: #fff;
+            transition: 0.2s all ease-in-out;
+        }
+        #back:hover {
+            background: #16423c;
+            color: white;
+        }
+        #next {
+            background: var(--secondary-bg-color);
+            border: 1px solid transparent;
+            color: #fff;
+        }
+        #next:hover {
+            background: #16423c;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="left-container">
+            <div class="puppy"></div>
+        </div>
+        <div class="right-container">
+            <header>
+                <h1>Carbon Footprint</h1>
+            </header>
+            <form action="/" method="POST">
+                <div class="input-group">
+                    <label for="vegetarian">Are you vegetarian?</label>
+                    <input id="vegetarian" name="vegetarian" type="text" placeholder="Enter Yes or No">
+                </div>
+                <div class="input-group">
+                    <label for="meals">How many meals per day?</label>
+                    <input id="meals" name="meals" type="number" placeholder="Enter in numbers">
+                </div>
+                <div class="input-group">
+                    <label for="transport">Mode of Transport:</label>
+                    <select id="transport" name="transport">
+                        <option value="public">Public Transport</option>
+                        <option value="personal">Personal Vehicle</option>
+                        <option value="flight">Flight</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="duration">Duration of Journey in a day?</label>
+                    <input id="duration" name="duration" type="number" placeholder="Enter in hours">
+                </div>
+                <div class="input-group">
+                    <label for="frequency">Frequency of Flight:</label>
+                    <select id="frequency" name="frequency">
+                        <option value="none">None</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="electricity">Electricity consumed:</label>
+                    <input id="electricity" name="electricity" type="number" placeholder="Enter in kW/h">
+                </div>
+                <div class="input-group">
+                    <label><b>Waste Management</b></label><br>
+                    <label>Waste Type:</label>
+                    <div class="radio-container">
+                        <input id="biodegradable" name="waste_type" type="radio" value="biodegradable" checked>
+                        <label for="biodegradable">Biodegradable</label>
+                        <input id="non-biodegradable" name="waste_type" type="radio" value="non-biodegradable">
+                        <label for="non-biodegradable">Non-Biodegradable</label>
+                        <input id="both" name="waste_type" type="radio" value="both">
+                        <label for="both">Both</label>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="quantity">Waste quantity of a day:</label>
+                    <input id="quantity" name="waste_quantity" type="number" placeholder="Enter in kg">
+                </div>
+                <div class="input-group">
+                    <label for="disposal-frequency">Waste disposal frequency:</label>
+                    <select id="disposal-frequency" name="waste_frequency">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="bi-weekly">Weekly twice</option>
+                        <option value="monthly">Monthly</option>
+                    </select>
+                </div>
+                <footer>
+                    <button type="submit">Submit</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
