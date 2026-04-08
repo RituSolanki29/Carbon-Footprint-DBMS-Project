@@ -5,7 +5,6 @@ import base64
 import matplotlib.pyplot as plt
 import traceback 
 
-
 app = Flask(__name__)
 
 # Configure MySQL connection
@@ -15,7 +14,6 @@ db_config = {
     "password": "manasaiscool",
     "database": "carbon_footprint"
 }
-
 
 @app.route('/home')
 def home():
@@ -32,9 +30,6 @@ def render_trend_analysis():
 @app.route('/pie_chart')
 def pie_chart():
     return render_template('pie_chart.html')
-
-
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -167,8 +162,6 @@ def index():
 
     return render_template("DBMS_Home.html")
 
-
-
 def calculate_food_footprint(is_veg, frequency):
     if is_veg:
         footprint = frequency * 0.4
@@ -217,7 +210,6 @@ def calculate_waste_footprint(waste_quantity, waste_type, disposal_freq):
 
     return round(waste_footprint, 2)
 
-
 @app.route('/get_pie_chart_data', methods=['GET'])
 def get_pie_chart_data():
     try:
@@ -249,8 +241,6 @@ def get_pie_chart_data():
             cursor.close()
             connection.close()
 
-
-    
 @app.route('/average_data', methods=['GET'])
 def average_data():
     try:
@@ -290,7 +280,6 @@ def average_data():
         if connection.is_connected():
             cursor.close()
             connection.close()
-
 
 @app.route('/getemissiongraph', methods=['GET'])
 def getemissiongraph():
